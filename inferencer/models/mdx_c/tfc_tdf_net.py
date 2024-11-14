@@ -1,11 +1,11 @@
 import torch
 from torch import nn
 
-from inferencer.models.downscale import Downscale
-from inferencer.models.stft import STFT
-from inferencer.models.tfc_tdf import TFC_TDF
-from inferencer.models.upscale import Upscale
-from inferencer.models.utils import get_act, get_norm
+from inferencer.models.mdx_c.downscale import Downscale
+from inferencer.models.mdx_c.stft import STFT
+from inferencer.models.mdx_c.tfc_tdf import TFC_TDF
+from inferencer.models.mdx_c.upscale import Upscale
+from inferencer.models.mdx_c.utils import get_act, get_norm
 
 
 class TFC_TDF_net(nn.Module):

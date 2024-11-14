@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 from inferencer import utils
 from inferencer.configs import MDX_C_MODEL_CONFIGS_PATH, MDX_C_MODEL_PATH
-from inferencer.models.tfc_tdf_net import TFC_TDF_net
+from inferencer.models.mdx_c.tfc_tdf_net import TFC_TDF_net
 from inferencer.separator import Separator
 
 
