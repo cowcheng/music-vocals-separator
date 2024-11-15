@@ -12,7 +12,7 @@ from inferencer import utils
 from inferencer.configs import (
     VR_DE_ECHO_CONFIGS_PATH,
     VR_DE_ECHO_MODEL_PATH,
-    VR_DE_ECHO_MODELS_PARAMS_PATH,
+    VR_MODELS_PARAMS_PATH,
 )
 from inferencer.models.vr.cascaded_net import CascadedNet
 from inferencer.models.vr.vr_model_param import ModelParameters
@@ -52,7 +52,7 @@ class VRDeEchoInferencer:
         self.model_data = utils.load_model_configs_file(
             config_path=VR_DE_ECHO_CONFIGS_PATH
         )["params"]
-        self.model_params = ModelParameters(config_path=VR_DE_ECHO_MODELS_PARAMS_PATH)
+        self.model_params = ModelParameters(config_path=VR_MODELS_PARAMS_PATH)
         nn_arch_sizes = [
             31191,
             33966,
@@ -103,7 +103,7 @@ class VRDeEchoInferencer:
     ) -> None:
         """
         Performs inference to remove echoes from a list of audio files.
-        
+
         This method processes each audio file by performing the following steps:
         - Loads the audio file and splits it into multiple frequency bands based on model parameters.
         - Converts the waveform to spectrograms for each band.
@@ -111,10 +111,10 @@ class VRDeEchoInferencer:
         - Generates masks using the trained model to isolate desired audio components.
         - Applies the masks to the spectrograms and reconstructs the audio waveform.
         - Saves the processed audio without echoes to the specified output directory.
-        
+
         Args:
             files_list (List[str]): A list of file paths to the audio files to be processed.
-        
+
         Raises:
             Exception: If the predicted mask has an incompatible shape or if no mask is generated.
         """
