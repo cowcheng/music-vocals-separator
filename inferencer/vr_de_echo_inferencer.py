@@ -90,13 +90,6 @@ class VRDeEchoInferencer:
             "aggr_correction": None,
         }
 
-    def postprocess(self, mask, X_mag, X_phase):
-        is_non_accom_stem = False
-        mask = utils.adjust_aggr(mask, is_non_accom_stem, self.aggressiveness)
-        y_spec = mask * X_mag * np.exp(1.0j * X_phase)
-        v_spec = (1 - mask) * X_mag * np.exp(1.0j * X_phase)
-        return y_spec, v_spec
-
     def infer(
         self,
         files_list: List[str],
