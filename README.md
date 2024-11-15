@@ -58,6 +58,32 @@ pip install -U pip wheel setuptools
 pip install -r requirements.txt
 ```
 
+### Download Models
+
+1. Navigate to the Inferencer Directory
+
+```bash
+cd inferencer
+```
+
+2. Install Git LFS (Large File Storage)
+
+```bash
+git lfs install
+```
+
+3. Clone the Model Repository
+
+```bash
+git clone https://huggingface.co/cowcheng/github-music-vocals-separator-models
+```
+
+4. Rename the Folder to 'weights'
+
+```bash
+mv github-music-vocals-separator-models weights
+```
+
 ## Usage
 
 To use the tool, run the following command:
