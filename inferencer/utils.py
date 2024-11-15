@@ -1,8 +1,9 @@
 import io
 import logging
 import math
-from os import sendfile
 import traceback
+from argparse import ArgumentParser, Namespace
+from os import sendfile
 
 import librosa
 import numpy as np
@@ -18,6 +19,62 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(name="MusicVocalsSeparator")
+
+
+def parse_args() -> Namespace:
+    """
+    Parses command-line arguments for the music vocals separator.
+
+    Returns:
+        Namespace: Parsed arguments containing:
+            input_dir (str): Input directory.
+            output_dir (str): Output directory.
+            mdx_c (bool): Flag to use MDX-C model.
+            de_echo (bool): Flag to use DE-Echo model.
+            de_noise (bool): Flag to use Denoise model.
+            keep_cache (bool): Flag to keep cache.
+    """
+
+    parser = ArgumentParser()
+    parser.add_argument(
+        "--input_dir",
+        type=str,
+        required=True,
+        help="Input directory",
+    )
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        required=True,
+        help="Output directory",
+    )
+    parser.add_argument(
+        "--mdx_c",
+        action="store_true",
+        required=True,
+        help="Use MDX-C model",
+    )
+    parser.add_argument(
+        "--de_echo",
+        action="store_true",
+        required=True,
+        help="Use DE-Echo model",
+    )
+    parser.add_argument(
+        "--de_noise",
+        action="store_true",
+        required=True,
+        help="Use Denoise model",
+    )
+    parser.add_argument(
+        "--keep_cache",
+        action="store_true",
+        required=True,
+        help="Keep cache",
+    )
+    args = parser.parse_args()
+    return args
+
 
 """
 Source from the UVR5 repository
