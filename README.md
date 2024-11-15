@@ -60,10 +60,10 @@ pip install -r requirements.txt
 
 ### Download Models
 
-1. Navigate to the Inferencer Directory
+1. Navigate to the `separator` Directory
 
 ```bash
-cd inferencer
+cd separator
 ```
 
 2. Install Git LFS (Large File Storage)
