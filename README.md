@@ -63,7 +63,7 @@ pip install -r requirements.txt
 To use the tool, run the following command:
 
 ```bash
-python main.py --input_dir ./input --output_dir ./output --mdx_c --de_echo --de_noise --keep_cache
+python main.py --input_dir <input_directory> --output_dir <output_directory> --mdx_c --de_echo --de_noise --keep_cache
 ```
 
 ### Command-Line Arguments
