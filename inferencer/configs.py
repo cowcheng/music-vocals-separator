@@ -11,3 +11,9 @@ MDX_C_MODEL_PATH = f"{ROOT_DIR}/inferencer/weights/mdx_c/MDX23C_D1581.ckpt"
 MDX_C_MODEL_CONFIGS_PATH = (
     f"{ROOT_DIR}/inferencer/configs/mdx_c/model_2_stem_061321.yaml"
 )
+
+VR_DE_ECHO_MODEL_PATH = (
+    f"{ROOT_DIR}/inferencer/weights/vr_de_echo/UVR-De-Echo-Aggressive.pth"
+)
+VR_DE_ECHO_CONFIGS_PATH = f"{ROOT_DIR}/inferencer/configs/vr/de_echo.yaml"
+VR_DE_ECHO_MODELS_PARAMS_PATH = f"{ROOT_DIR}/inferencer/configs/vr/4band_v3.json"

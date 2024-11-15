@@ -1,0 +1,5 @@
+params:
+  vr_model_param: 4band_v3
+  primary_stem: Echo
+  nout: 48
+  nout_lstm: 128
