@@ -1,6 +1,6 @@
 from torch import nn
 
-from inferencer.models.vr.conv2dbn import Conv2DBNActiv
+from separator.models.vr.conv2dbn import Conv2DBNActiv
 
 
 class Encoder(nn.Module):

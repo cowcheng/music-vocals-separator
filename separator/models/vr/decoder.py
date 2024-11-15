@@ -2,8 +2,8 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from inferencer.models.vr import utils
-from inferencer.models.vr.conv2dbn import Conv2DBNActiv
+from separator.models.vr import utils
+from separator.models.vr.conv2dbn import Conv2DBNActiv
 
 
 class Decoder(nn.Module):

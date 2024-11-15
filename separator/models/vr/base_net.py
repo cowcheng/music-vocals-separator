@@ -1,11 +1,11 @@
 import torch
 from torch import nn
 
-from inferencer.models.vr.aspp import ASPPModule
-from inferencer.models.vr.conv2dbn import Conv2DBNActiv
-from inferencer.models.vr.decoder import Decoder
-from inferencer.models.vr.encoder import Encoder
-from inferencer.models.vr.lstm import LSTMModule
+from separator.models.vr.aspp import ASPPModule
+from separator.models.vr.conv2dbn import Conv2DBNActiv
+from separator.models.vr.decoder import Decoder
+from separator.models.vr.encoder import Encoder
+from separator.models.vr.lstm import LSTMModule
 
 
 class BaseNet(nn.Module):

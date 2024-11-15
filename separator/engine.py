@@ -7,11 +7,11 @@ from typing import List, Type
 
 import torch
 
-from inferencer.configs import ROOT_DIR
-from inferencer.mdx_c_inferencer import MDXCInferencer
-from inferencer.utils import logger
-from inferencer.vr_de_echo_inferencer import VRDeEchoInferencer
-from inferencer.vr_de_noise_inferencer import VRDeNoiseInferencer
+from separator.configs import ROOT_DIR
+from separator.mdx_c_inferencer import MDXCInferencer
+from separator.utils import logger
+from separator.vr_de_echo_inferencer import VRDeEchoInferencer
+from separator.vr_de_noise_inferencer import VRDeNoiseInferencer
 
 warnings.filterwarnings(action="ignore")
 

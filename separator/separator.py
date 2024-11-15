@@ -1,4 +1,4 @@
-from inferencer import utils
+from separator import utils
 
 
 class Separator:

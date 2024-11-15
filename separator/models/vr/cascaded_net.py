@@ -2,8 +2,8 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from inferencer.models.vr.base_net import BaseNet
-from inferencer.models.vr.conv2dbn import Conv2DBNActiv
+from separator.models.vr.base_net import BaseNet
+from separator.models.vr.conv2dbn import Conv2DBNActiv
 
 
 class CascadedNet(nn.Module):

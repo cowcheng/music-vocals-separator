@@ -8,54 +8,53 @@ import soundfile
 import torch
 from tqdm import tqdm
 
-from inferencer import utils
-from inferencer.configs import (
-    VR_DE_NOISE_CONFIGS_PATH,
-    VR_DE_NOISE_MODEL_PATH,
+from separator import utils
+from separator.configs import (
+    VR_DE_ECHO_CONFIGS_PATH,
+    VR_DE_ECHO_MODEL_PATH,
     VR_MODELS_PARAMS_PATH,
 )
-from inferencer.models.vr.cascaded_net import CascadedNet
-from inferencer.models.vr.vr_model_param import ModelParameters
+from separator.models.vr.cascaded_net import CascadedNet
+from separator.models.vr.vr_model_param import ModelParameters
 
 
-class VRDeNoiseInferencer:
+class VRDeEchoInferencer:
     def __init__(
         self,
         output_dir: str,
         device: str,
     ) -> None:
         """
-        Initialize the VRDeNoiseInferencer.
-        
+        Initialize the VRDeEchoInferencer.
+
         Args:
-            output_dir (str): Directory where output files will be saved.
-            device (str): Device to run the model on (e.g., 'cpu' or 'cuda').
-        
+            output_dir (str): The directory where output files will be saved.
+            device (str): The device to run the model on (e.g., 'cpu' or 'cuda').
+
         Attributes:
             output_dir (str): Directory for saving output files.
-            device (torch.device): Torch device used for model computations.
+            device (torch.device): Torch device used for computation.
             model_data (dict): Configuration parameters loaded for the model.
-            model_params (ModelParameters): Parameters specific to the model.
-            model (CascadedNet): The neural network model used for denoising.
-            is_vr_51_model (bool): Indicates if the VR 5.1 model is used.
-            sample_rate (int): The sample rate for audio processing.
-            wav_type_set (str): WAV file format type.
-            window_size (int): Size of the processing window.
-            batch_size (int): Number of samples processed in a batch.
-            aggressiveness (dict): Settings controlling the denoising aggressiveness.
+            model_params (ModelParameters): Model parameters loaded from the configuration.
+            model (CascadedNet): The neural network model used for inference.
+            is_vr_51_model (bool): Flag indicating if the VR 5.1 model is used.
+            sample_rate (int): Audio sample rate set to 44100 Hz.
+            wav_type_set (str): WAV file type set to "PCM_16".
+            window_size (int): Size of the window for processing, set to 512.
+            batch_size (int): Batch size for processing, set to 1.
+            aggressiveness (dict): Settings for aggressiveness in processing, including value, split_bin, and aggr_correction.
         """
 
-        self.output_dir = output_dir
         self.output_dir = output_dir
         self.device = torch.device(
             device=device if torch.cuda.is_available() else "cpu"
         )
         self.model_data = utils.load_model_configs_file(
-            config_path=VR_DE_NOISE_CONFIGS_PATH
+            config_path=VR_DE_ECHO_CONFIGS_PATH
         )["params"]
         self.model_params = ModelParameters(config_path=VR_MODELS_PARAMS_PATH)
         nn_arch_sizes = [
-            31191,  # default
+            31191,
             33966,
             56817,
             123821,
@@ -65,7 +64,7 @@ class VRDeNoiseInferencer:
             537238,
             537227,
         ]
-        model_size = math.ceil(os.stat(VR_DE_NOISE_MODEL_PATH).st_size / 1024)
+        model_size = math.ceil(os.stat(VR_DE_ECHO_MODEL_PATH).st_size / 1024)
         nn_arch_size = min(nn_arch_sizes, key=lambda x: abs(x - model_size))
         self.model = CascadedNet(
             self.model_params.param["bins"] * 2,
@@ -76,7 +75,7 @@ class VRDeNoiseInferencer:
         self.is_vr_51_model = True
         self.model.load_state_dict(
             state_dict=torch.load(
-                f=VR_DE_NOISE_MODEL_PATH,
+                f=VR_DE_ECHO_MODEL_PATH,
                 map_location=torch.device(device="cpu"),
             )
         )
@@ -96,25 +95,26 @@ class VRDeNoiseInferencer:
         files_list: List[str],
     ) -> None:
         """
-        Perform inference to denoise vocal tracks from a list of audio files.
-        
-        This method processes each audio file in the provided `files_list` by:
-        - Loading and resampling the audio waveform across multiple frequency bands.
-        - Generating spectrograms for each band.
-        - Combining spectrograms and preprocessing for model input.
-        - Applying the trained model to predict masks for noise reduction.
-        - Adjusting and applying the mask to obtain the denoised spectrogram.
-        - Converting the processed spectrogram back to waveform and saving the output audio.
-        
+        Performs inference to remove echoes from a list of audio files.
+
+        This method processes each audio file by performing the following steps:
+        - Loads the audio file and splits it into multiple frequency bands based on model parameters.
+        - Converts the waveform to spectrograms for each band.
+        - Combines spectrograms from all bands and preprocesses them for model input.
+        - Generates masks using the trained model to isolate desired audio components.
+        - Applies the masks to the spectrograms and reconstructs the audio waveform.
+        - Saves the processed audio without echoes to the specified output directory.
+
         Args:
             files_list (List[str]): A list of file paths to the audio files to be processed.
-        
+
         Raises:
-            Exception: If the predicted mask dimensions are incompatible or if no mask is generated.
+            Exception: If the predicted mask has an incompatible shape or if no mask is generated.
         """
+
         for file in tqdm(
             iterable=files_list,
-            desc=f"VR DE NOISE inferencing on device {self.device}",
+            desc=f"VR DE ECHO inferencing on device {self.device}",
         ):
             filename = file.split("/")[-1].split(".")[0]
             X_wave, X_spec_s = {}, {}
@@ -202,14 +202,14 @@ class VRDeNoiseInferencer:
             mask = mask[:, :, :n_frame]
             is_non_accom_stem = False
             mask = utils.adjust_aggr(mask, is_non_accom_stem, self.aggressiveness)
-            v_spec = (1 - mask) * X_mag * np.exp(1.0j * X_phase)
-            output_audio_path = f"{self.output_dir}/{filename}_no-noise.wav"
-            source_secondary = utils.cmb_spectrogram_to_wave(
-                v_spec, self.model_params, is_v51_model=self.is_vr_51_model
+            y_spec = mask * X_mag * np.exp(1.0j * X_phase)
+            output_audio_path = f"{self.output_dir}/{filename}_no-echo.wav"
+            source_primary = utils.cmb_spectrogram_to_wave(
+                y_spec, self.model_params, is_v51_model=self.is_vr_51_model
             ).T
             soundfile.write(
                 output_audio_path,
-                source_secondary,
+                source_primary,
                 self.sample_rate,
                 subtype=self.wav_type_set,
             )

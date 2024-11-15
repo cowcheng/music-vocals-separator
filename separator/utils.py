@@ -10,7 +10,7 @@ import numpy as np
 import yaml
 from ml_collections import ConfigDict
 
-from inferencer.configs import LOG_DATEFMT, LOG_FORMAT, LOG_LEVEL
+from separator.configs import LOG_DATEFMT, LOG_FORMAT, LOG_LEVEL
 
 logging.basicConfig(
     format=LOG_FORMAT,
